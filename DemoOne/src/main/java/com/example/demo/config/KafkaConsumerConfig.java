@@ -1,7 +1,7 @@
 package com.example.demo.config;
 
 
-import com.example.demo.UserDto;
+
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.LongDeserializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
