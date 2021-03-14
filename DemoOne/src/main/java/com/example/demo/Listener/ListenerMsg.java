@@ -1,6 +1,8 @@
 package com.example.demo.Listener;
 
-import com.example.demo.TimeResponse.TimeResponse;
+
+import com.example.demo.config.MassageDto;
+import com.google.gson.Gson;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.producer.internals.Sender;
 import org.slf4j.Logger;
@@ -14,17 +16,19 @@ import java.util.Date;
 
 @Component
 public class ListenerMsg {
-    Date date = new Date();
+
     private static final Logger LOG = LoggerFactory.getLogger(ListenerMsg.class);
 
     DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
     @KafkaListener(topics="msg1")
     public void msgListener1(String msg, ConsumerRecord<String, String> record){
-        LocalDateTime dt= LocalDateTime.now();
-        TimeResponse.setResponseTime(date.getTime());
-        LOG.info("Listener AppDemoOne Topic = '{}' |  Massage '{}' |  Partition '{}'  |"  ,record.topic(),record.value(),record.partition());
-        System.out.println("["+dt.format(myFormatObj)+"] "+record.topic() + ": " + msg + " Time Response : "+TimeResponse.getResultResponseTime(TimeResponse.getRequestTime(),TimeResponse.getResponseTime())+"ms");
+        Gson g = new Gson();
+        MassageDto p = g.fromJson(msg, MassageDto.class);
+        LOG.info("Log info listener App DemoOne");
+        System.out.println("Полученно:  \n"+"Topic : "+record.topic()+"\nMessage:"+ p.getMassage() +"\n"+ "Response time: "+p.TimeResponseResult());
+
     }
+
 
 }

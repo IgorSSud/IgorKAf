@@ -13,9 +13,6 @@ import org.springframework.kafka.core.KafkaTemplate;
 @SpringBootApplication
 
 public class DemoApplication {
-	@Autowired
-	private KafkaTemplate<String, String> kafkaTemplate;
-
 
 
 	public static void main(String[] args) {

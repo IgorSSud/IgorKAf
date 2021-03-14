@@ -1,5 +1,7 @@
 package com.example.demo.Listener;
 
+import com.example.demo.config.MassageDto;
+import com.google.gson.Gson;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import javax.xml.crypto.Data;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -24,16 +27,21 @@ public class Listener {
     private static final Logger LOG = LoggerFactory.getLogger(Listener.class);
 
     @Autowired
-    private KafkaTemplate<String, String> kafkaTemplate;
-
+    private KafkaTemplate<String, MassageDto> kafkaTemplate;
     @KafkaListener(topics="msg")
     public void msgListener(String msg, ConsumerRecord<String, String> record) {
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
-        LocalDateTime dt= LocalDateTime.now();
-        kafkaTemplate.send("msg1","OK");
-        LOG.info("Listener AppDemoOne Topic = '{}' |  Massage '{}' |  Partition '{}'  |"  ,record.topic(),record.value(),record.partition());
-        LOG.info("Producer AppDemoOne  Topic = '{}' |  Massage '{}' |"  ,"msg",msg);
-        System.out.println("["+dt.format(myFormatObj)+"] "+record.topic() + ": " + msg);
+        Gson g = new Gson();
+        MassageDto p = g.fromJson(msg, MassageDto.class);
+
+        LOG.info("Log info listener App DemoTwo");
+        System.out.println("Полученно:  \n"+"Topic : "+record.topic()+"\nMessage:"+ p.getMassage() +"\n");
+
+        p.setMassage("OK");
+        p.setTimeResponse(timestamp.getTime());
+        kafkaTemplate.send("msg1",p);
+        /*System.out.println("ОТПРАВЛЕННО : "+p.toString());*/
     }
 
 }
