@@ -16,16 +16,15 @@ import java.util.Date;
 
 @Component
 public class ListenerMsg {
-
+    private final Gson g = new Gson();
     private static final Logger LOG = LoggerFactory.getLogger(ListenerMsg.class);
 
     DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
     @KafkaListener(topics="msg1")
     public void msgListener1(String msg, ConsumerRecord<String, String> record){
-        Gson g = new Gson();
-        MassageDto p = g.fromJson(msg, MassageDto.class);
         LOG.info("Log info listener App DemoOne");
+        MassageDto p = g.fromJson(msg, MassageDto.class);
         System.out.println("Полученно:  \n"+"Topic : "+record.topic()+"\nMessage:"+ p.getMassage() +"\n"+ "Response time: "+p.TimeResponseResult());
 
     }

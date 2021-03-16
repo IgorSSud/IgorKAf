@@ -37,14 +37,14 @@ public class KafkaConsumerConfig {
 
     @Bean
     public KafkaListenerContainerFactory<?> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, MassageDto> factory =
+        ConcurrentKafkaListenerContainerFactory<String, String> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;
     }
 
     @Bean
-    public ConsumerFactory<String, MassageDto> consumerFactory() {
+    public ConsumerFactory<String, String> consumerFactory() {
         return new DefaultKafkaConsumerFactory<>(consumerConfigs());
     }
 }
